@@ -34,13 +34,35 @@
         }
 
         p {
+
             padding: 5px;
             border: 1px solid #ccc;
             background-color: #f9f9f9;
         }
 
-        .hidden {
-            display: none;
+        #level1,
+        #level1_VC {
+            background-color: #e6ece1;
+        }
+
+        #level2,
+        #level2_VC {
+            background-color: #eaecf8;
+        }
+
+        #level3,
+        #level3_VC {
+            background-color: #f2e3f5;
+        }
+
+        #level4,
+        #level4_VC {
+            background-color: #f5e9e2;
+        }
+
+        #level5,
+        #level5_VC {
+            background-color: #f2f5c8;
         }
     </style>
 </head>
@@ -50,31 +72,51 @@
         <h2>Cost Center Code Generator</h2>
         <label for="level1">Level 1:</label>
         <select id="level1" onchange="updateLevel2()">
-            <option value="">Select Level 1</option>
-            <option value="90">WWTP</option>
-            <option value="91">WWCN & PSs</option>
+            <option value="" selected="selected">Select Level 1</option>
+            <!-- WWTP -->
+            <option value="101">WWTP Mechanical Treatment: Location (A)</option>
+            <option value="102">WWTP Biological Treatment: Location (B)</option>
+            <option value="103">WWTP Sludge & Gas Path: Location (C)</option>
+            <option value="104">WWTP Tertiary Treatment: Location (D)</option>
+            <option value="105">WWTP Potable Water PS: Location (E)</option>
+            <option value="106">WWTP Stormwater PS: Location (F)</option>
+            <option value="107">WWTP Fire Alarm/Fire Fighting System and Network</option>
+            <option value="108">WWTP MV/LV Building</option>
+            <option value="109">WWTP Emergency Generators</option>
+            <option value="110">WWTP (General Costs)</option>
+            <option value="111">WWTP (Consumables ,Food and Other Costs)</option>
+            <!-- WWCN -->
+            <option value="120">WWCN Pumping Stations</option>
+            <option value="121">WWCN Network</option>
+            <!-- <option value="122">PS (General, Consumables & Other Costs)</option> -->
+            <option value="122">WWCN and PSs (General, Consumables & Other Costs)</option>
+            <!-- External and third party services cost -->
+            <option value="130">WWTS External and Third party services cost</option>
+            <!-- Vihcles -->
+            <option value="150">WWTS Vehicles</option>
+
+
         </select>
 
         <label for="level2">Level 2:</label>
         <select id="level2" onchange="updateLevel3()">
-            <option value="">Select Level 2</option>
+            <option value="" selected="selected">Select Level 2</option>
         </select>
 
         <label for="level3">Level 3:</label>
         <select id="level3" onchange="updateLevel4()">
-            <option value="">Select Level 3</option>
+            <option value="" selected="selected">Select Level 3</option>
         </select>
 
         <label for="level4">Level 4:</label>
-        <select id="level4" onchange="checkOthers()">
-            <option value="">Select Level 4</option>
+        <select id="level4" onchange="updateLevel5()">
+            <option value="" selected="selected">Select Level 4</option>
         </select>
 
-        <div id="otherField" class="hidden">
-            <label for="otherName">Specify:</label>
-            <input type="text" id="otherName">
-            <button onclick="addCustomOption()">Add</button>
-        </div>
+        <label for="level5">Level 5:</label>
+        <select id="level5" onchange="generateCode()">
+            <option value="" selected="selected">Select Level 5</option>
+        </select>
 
         <h2>Generated Code</h2>
         <p id="generatedCode">-</p>
@@ -87,290 +129,690 @@
     </div>
 
     <script>
+        // -----------------------LEVEL 2-----------------------------------------
         const level2Options = {
-            '90': [
-                { code: '8000', name: 'Potable Water PS incl. Network' },
-                { code: '8001', name: 'Effluent Flowmeter & Valves' },
-                { code: '8002', name: 'Service Water Pump Station incl. Network' },
-                { code: '8003', name: 'Tanker Reception Station' },
-                { code: '8004', name: 'Inlet Distribution Chamber' },
-                { code: '8005', name: 'Stormwater PS incl. pressure main' },
-                { code: '8006', name: 'Supernatant Pumping Station' },
-                { code: '8007', name: 'Inlet Flowmeter' },
-                { code: '8008', name: 'Screening Building, Screening Unit and MCC Room' },
-                { code: '8009', name: 'Grit and Grease Chamber' },
-                { code: '8010', name: 'Primary Sedimentation' },
-                { code: '8011', name: 'Distribution Chamber to Activated Sludge Tanks' },
-                { code: '8012', name: 'Aeration Tank' },
-                { code: '8013', name: 'Anaerobic Selector / Anoxic Tank' },
-                { code: '8014', name: 'Secondary Sedimentation Tanks' },
-                { code: '8015', name: 'Collection Chamber after Secondary Sedimentation' },
-                { code: '8016', name: 'Precipitation Dosing Station' },
-                { code: '8017', name: 'Filtration/Backwash PS/Backwash Blower' },
-                { code: '8018', name: 'Chlorination' },
-                { code: '8019', name: 'Outlet Sampler and Sea Outfall' },
-                { code: '8020', name: 'Anaerobic Digestion/Digester/Recirculation PS/Digester Feed PS/Heat Exchanger/MCC Room' },
-                { code: '8021', name: 'Digested Sludge Storage Tank' },
-                { code: '8022', name: 'Primary Sludge Pumping Station' },
-                { code: '8023', name: 'Return Sludge Pump Station (RAS PS)' },
-                { code: '8024', name: 'Surplus Sludge Pump Station (WAS PS)' },
-                { code: '8025', name: 'Dirty Backwash Water Tank and Sludge Mixing Tank' },
-                { code: '8026', name: 'Clearwater Tank/Backwash Water System/Intermediate PS/Tanker Feed PS/Aeration Blowers/Outlet Flowmeter chamber' },
-                { code: '8027', name: 'Old Sludge Dewatering: Belt Filter Press/Digested Sludge Pumps/Belt Conveyor' },
-                { code: '8028', name: 'Old Dewatering Building: Polymer Dosing Station for Belt Press' },
-                { code: '8029', name: 'Old Dewatering Building: Sludge Thickening/Belt thickener 1 & 2/Polymer dosing station for Belt Thickener 1 & 2/Mixed Sludge Pumps/Thickened Sludge Pumps/Thickened Sludge Storage' },
-                { code: '8030', name: 'New Sludge Dewatering Building including all Equipment' },
-                { code: '8031', name: 'Gas Room' },
-                { code: '8032', name: 'Gas Compressor/Gas Injection System' },
-                { code: '8033', name: 'Gas Storage Tank/Gas Dewatering Shaft' },
-                { code: '8034', name: 'Gas Booster Station' },
-                { code: '8035', name: 'Boiler Station/Ceramic Filter' },
-                { code: '8036', name: 'Diesel Storage Tank' },
-                { code: '8037', name: 'Gas Flare/Gravel Filter' },
-                { code: '8038', name: 'Inlet Biofilter/Odor Control unit' },
-                { code: '8039', name: 'Irrigation network system/Filtration' },
-                { code: '8040', name: 'MV/LV Building' },
-                { code: '8041', name: 'Diesel Pumps (WWTP)' },
-                { code: '8042', name: 'Emergency Generators (WWTP)' },
-                { code: '8043', name: 'Fire Alarm and Fire Fighting System' },
-                { code: '8044', name: 'Buildings (Operation Building, Service Building, Workshop, Store, Guardhouses) incl. AC-Service' },
-                { code: '8045', name: 'Fence & Gates' },
-                { code: '8046', name: 'Illumination (inside & outside)' },
-                { code: '8047', name: 'Roads, Footpaths' },
-                { code: '8048', name: 'Electricity' },
-                { code: '8049', name: 'Potable Water' },
-                { code: '8050', name: 'Chlorine Gas' },
-                { code: '8051', name: 'Ferric Chloride' },
-                { code: '8052', name: 'Polyelectrolyte' },
-                { code: '8053', name: 'Diesel for Over Pumping' },
-                { code: '8054', name: 'Diesel (other consumers)' },
-                { code: '8055', name: 'Etisalat' },
-                { code: '8056', name: 'Consumables Workshop (Paint, Oil, Grease etc.)' },
-                { code: '8057', name: 'General Material Workshop (steel, nuts, bolts, welding consumables, material lathe etc.)' },
-                { code: '8058', name: 'Tools (Workshop, Landscaping etc.)' },
-                { code: '8059', name: 'HSE: (PPE, testing, calibration, Hassantuk)' },
-                { code: '8060', name: 'IT (soft and hardware incl. network, SCADA)' },
-                { code: '8061', name: 'WTP General' },
-                { code: '8062', name: 'ADM. General' },
-                { code: '8063', name: 'Lab Expenses, lab consumables, external labs' }   // Add more Level 2 options for WWTP
+            //   WWTP Mechanical Treatment: Location (A)
+            '101':
+                [
+                    { code: '2001', name: 'Tanker Reception Station' },
+                    { code: '2002', name: 'Inlet Distribution Chamber' },
+                    { code: '2003', name: 'Inlet Flowmeter' },
+                    { code: '2004', name: 'Screening Building, Screening Unit and MCC Room' },
+                    { code: '2005', name: 'Grit and Grease Chamber' },
+                    { code: '2006', name: 'Primary Sedimentation Tank' },
+                    { code: '2007', name: 'Primary Sludge Pumping Station' },
+                    { code: '2008', name: 'Inlet Biofilter/Odor Control unit' }
+                ],
+            // WWTP Biological Treatment: Location (B)
+            '102':
+                [
+                    { code: '2020', name: 'Distribution Chamber to Activated Sludge Tanks' },
+                    { code: '2021', name: 'Aeration Tank' },
+                    { code: '2022', name: 'Anaerobic Selector / Anoxic Tank' },
+                    { code: '2023', name: 'Secondary Sedimentation Tanks' },
+                    { code: '2024', name: 'Precipitation Dosing Station' },
+                    { code: '2025', name: 'Return Sludge Pump Station (RAS PS)' }
+
+                ],
+            // WWTP Sludge & Gas Path: Location (C)
+            '103':
+                [
+                    { code: '2040', name: 'Supernatant Pumping Station' },
+                    { code: '2041', name: 'Anaerobic Digestion/Digester/Recirculation PS/Digester Feed PS/Heat Exchanger/MCC Room' },
+                    { code: '2042', name: 'Digested Sludge Storage Tank' },
+                    { code: '2043', name: 'Surplus Sludge Pump Station (WAS PS)' },
+                    { code: '2044', name: 'Sludge Mixing Tank' },
+                    { code: '2045', name: 'Old Sludge Dewatering: Belt Filter Press/Digested Sludge Pumps/Belt Conveyor' },
+                    { code: '2046', name: 'Old Dewatering Building: Polymer Dosing Station for Belt Press' },
+                    { code: '2047', name: 'Old Dewatering Building: Sludge Thickening/Belt thickener 1 & 2/Polymer dosing station for Belt Thickener 1 & 2/Mixed Sludge Pumps/Thickened Sludge Pumps/Thickened Sludge Storage Tank ' },
+                    { code: '2048', name: 'New Sludge Dewatering Building including all Equipment' },
+                    { code: '2049', name: 'Gas Room' },
+                    { code: '2050', name: 'Gas Compressor/Gas Injection System' },
+                    { code: '2051', name: 'Gas Storage Tank/Gas Dewatering Shaft' },
+                    { code: '2052', name: 'Gas Booster Station' },
+                    { code: '2053', name: 'Boiler Station/Ceramic Filter' },
+                    { code: '2054', name: 'Diesel Storage Tank' },
+                    { code: '2055', name: 'Gas Flare/Gravel Filter' },
+                    { code: '2056', name: 'Outlet Biofilter/ Odor Control unit' }
+
+                ],
+            // WWTP Tertiary Treatment: Location (D)
+            '104':
+                [
+                    { code: '2070', name: 'Effluent Flowmeter & Valves' },
+                    { code: '2071', name: 'Service Water Pump Station incl. Network' },
+                    { code: '2072', name: 'Collection Chamber after Secondary Sedimentation' },
+                    { code: '2073', name: 'Filtration/Backwash PS/Backwash Blower' },
+                    { code: '2074', name: 'Chlorination' },
+                    { code: '2075', name: 'Outlet Sampler and Sea Outfall' },
+                    { code: '2076', name: 'Dirty Backwash Water Tank' },
+                    { code: '2077', name: 'Clearwater Tank/Backwash Water System/Intermediate PS/Tanker Feed PS/Aeration Blowers/Outlet Flowmeter chamber' },
+                    { code: '2078', name: 'Irrigation network system/Filtration' }
+
+                ],
+            // WWTP Potable Water PS: Location (E)
+            '105':
+                [
+                    { code: '2090', name: 'Potable Water PS incl. Network' }
+                ],
+            // WWTP Stormwater PS: Location (F)
+            '106':
+                [
+                    { code: '2095', name: 'Stormwater PS incl. pressure main' }
+                ],
+            // WWTP Fire Alarm/Fire Fighting System and Network
+            '107':
+                [
+                    { code: '2100', name: 'Fire Alarm and Fire Fighting System' }
+                ],
+            // WWTP MV/LV Building
+            '108':
+                [
+                    { code: '2105', name: 'MV/LV Building' }
+                ],
+            // WWTP Emergency Generators
+            '109':
+                [
+                    { code: '2110', name: 'Emergency Generators' }
+                ],
+            // WWTP (General Costs)
+            '110':
+                [
+                    { code: '2120', name: 'Buildings (Operation Building, Service Building, Workshop, Store, Guardhouses) incl. AC-Service' },
+                    { code: '2121', name: 'Fence & Gates' },
+                    { code: '2122', name: 'Illumination (inside & outside)' },
+                    { code: '2123', name: 'Roads, Footpaths' },
+                    { code: '2124', name: 'Process Structures and Tanks-WWTP' }
+
+                ],
+            // WWTP (Consumables & Other Costs)
+            '111':
+                [
+                    { code: '2130', name: 'Electricity' },
+                    { code: '2131', name: 'Potable Water' },
+                    { code: '2132', name: 'Chlorine Gas' },
+                    { code: '2133', name: 'Ferric Chloride' },
+                    { code: '2134', name: 'Polyelectrolyte' },
+                    { code: '2135', name: 'Diesel for Over Pumping' },
+                    { code: '2136', name: 'Diesel (other consumers)' },
+                    { code: '2137', name: 'Etisalat' },
+                    { code: '2138', name: 'Consumables Workshop (Paint, Oil, Grease etc.)' },
+                    { code: '2139', name: 'General Material Workshop (steel, nuts, bolts, welding consumables, material lathe etc.)' },
+                    { code: '2140', name: 'Tools (Workshop, Landscaping etc.)' },
+                    { code: '2141', name: 'HSE: (PPE, testing, calibration, Hassantuk)' },
+                    { code: '2144', name: 'Admin General and Other cost' },
+                    { code: '2145', name: 'Lab Expenses, lab consumables, external labs' },
+                    { code: '2146', name: 'Food and refereshment' },
+
+
+                ],
+            // PUMP Stations
+            '120':
+                [
+                    { code: '2200', name: 'PS 01' },
+                    { code: '2201', name: 'PS 02' },
+                    { code: '2202', name: 'PS 03' },
+                    { code: '2203', name: 'PS 04' },
+                    { code: '2204', name: 'PS 05' },
+                    { code: '2205', name: 'PS 06' },
+                    { code: '2206', name: 'PS Rughaylat' },
+                    { code: '2207', name: 'PS Sakamkam 1' },
+                    { code: '2208', name: 'PS Sakamkam 2' },
+                    { code: '2209', name: 'PS University 1' },
+                    { code: '2210', name: 'PS University 2' },
+                    { code: '2211', name: 'PS Al Owaid' },
+                    { code: '2212', name: 'PS Mirbah' },
+                    { code: '2213', name: 'PS Mirbah 1' },
+                    { code: '2214', name: 'PS Mirbah 2.1' },
+                    { code: '2215', name: 'PS Mirbah 2.2' },
+                    { code: '2216', name: 'PS Mirbah 3' },
+                    { code: '2217', name: 'PS Mirbah 6' },
+                    { code: '2218', name: 'PS Qurayyah East' },
+                    { code: '2219', name: 'PS Qurayyah Main' },
+                    { code: '2220', name: 'PS Qurayyah West' },
+                    { code: '2221', name: 'PS Thieb' },
+                    { code: '2222', name: 'PS Navy Base 1' },
+                    { code: '2223', name: 'PS Navy Base 2' },
+                    { code: '2224', name: 'PS Qirath 2' },
+                    { code: '2225', name: 'PS Qirath 1' },
+                    { code: '2226', name: 'PS 3.1' },
+                    { code: '2227', name: 'PS 4.1' },
+                    { code: '2228', name: 'PS 5.1' },
+                    { code: '2229', name: 'PS 6.1' },
+                    { code: '2230', name: 'PS MBZC' },
+                    { code: '2231', name: 'PS MBZC Lifting Station' },
+                    { code: '2232', name: 'PS Free Zone 23' },
+                    // { code: '2233', name: 'ps general or consumables' }
+                ],
+            // WWCN
+            '121':
+                [
+                    { code: '2250', name: 'WWCN Air Release Valve Chambers' },
+                    { code: '2251', name: 'WWCN Washout Chambers' },
+                    { code: '2252', name: 'WWCN Manholes' },
+
+                ],
+            // PS & WWCN (General, Consumables & Other Costs)
+            '122':
+                [
+                    { code: '2301', name: 'Electricity' },
+                    { code: '2302', name: 'Potable Water' },
+                    { code: '2303', name: 'Ferric Chloride' },
+                    { code: '2304', name: 'Diesel (other consumers)' },
+                    { code: '2305', name: 'Etisalat' },
+                    { code: '2306', name: 'Consumables' },
+                    { code: '2307', name: 'HSE: (PPE, testing, calibration, Hassantuk)' },
+                    { code: '2308', name: 'Admin General' },
+
+                ],
+            // <!-- External and third party services cost -->
+
+            '130':
+                [
+                    { code: '2260', name: 'Testing,Calibration,Verification and Other similar third party works' },
+                ],
+
+            // Vehicles -WWTS
+            '150':
+                [
+                    { code: '2501', name: 'M-83140_Toyota Pickup' },
+                    { code: '2502', name: 'M-89053_Toyota Pickup' },
+                    { code: '2503', name: 'M-91106_Toyota Pickup' },
+                    { code: '2504', name: 'A-70801_Toyota Pickup' },
+                    { code: '2505', name: 'M-72417_Toyota Pickup' },
+                    { code: '2506', name: 'A-67955_Toyota Fortuner' },
+                    { code: '2507', name: 'A-23076_Suction Tanker (New)' },
+                    { code: '2508', name: 'G-28396_Skip Loader (Old)' },
+                    { code: '2509', name: 'A-33728_Skip Loader (New)' },
+                    { code: '2510', name: 'G-28608_Crane' },
+                    { code: '2511', name: 'A-67618_Suction Tanker (Old)' },
+                    { code: '2512', name: 'A-67842_Potable Water Tanker' },
+                    { code: '2513', name: 'A-73562_Vac-Cone' },
+                    { code: '2514', name: 'A-63861_Man lift' },
+                    { code: '2515', name: 'A-73624_JCB' },
+                    { code: '2516', name: 'A 72503_Forklift ' },
+                ],
+        };
+
+        // ----------------------------LEVEL 3--------------------------------------------------
+        const civilAndElectroWorks = [
+            { code: '30', name: 'Civil Works' },
+            { code: '32', name: 'Electromechanical Works' }
+        ];
+        const vehicleOwnership = [
+            { code: '35', name: 'Ownership_TANQIA FZC' },
+            { code: '36', name: 'Ownership_ALRIYAD' }
+        ];
+        const level3Options = {
+        };
+        for (let code = 2001; code <= 2300; code++) {
+            level3Options[code.toString()] = civilAndElectroWorks;
+        }
+
+        for (let codeA = 2500; codeA <= 2599; codeA++) {
+            level3Options[codeA.toString()] = vehicleOwnership;
+        };
+
+
+        // ----------------------------LEVEL 4--------------------------------------------------
+
+        const level4Options = {
+            '30': [
+
+                { code: '401', name: 'Civil Works others (Road, footpath, perimeter wall, landscaping, illumination, perimeter wall) - WWTP' },
+                { code: '402', name: 'Civil Works for Process Structures and Tanks - WWTP' },
+                { code: '403', name: 'Civil Works for Buildings in General - WWTP' },
+                { code: '404', name: 'Civil Works for Buildings in General - PSS' },
+                { code: '405', name: 'Civil Works for Process Structures and Tanks - PSS' },
+                { code: '406', name: 'Civil Works others (Road, footpath, perimeter wall, landscaping, illumination, perimeter wall) - Pss' },
+                { code: '407', name: 'Air Release Valve Chambers _WWCN' },
+                { code: '408', name: 'Washout Chambers _WWCN' },
+                { code: '409', name: 'Manholes _WWCN' },
+                { code: '415', name: 'All Third party services cost' },
+
             ],
-            '91': [
-                { code: '8064', name: 'PS 01' },
-                { code: '8065', name: 'PS 02' },
-                { code: '8066', name: 'PS 03' },
-                { code: '8067', name: 'PS 04' },
-                { code: '8068', name: 'PS 05' },
-                { code: '8069', name: 'PS 06' },
-                { code: '8070', name: 'PS Rughaylat' },
-                { code: '8071', name: 'PS Sakamkam 1' },
-                { code: '8072', name: 'PS Sakamkam 2' },
-                { code: '8073', name: 'PS University 1' },
-                { code: '8074', name: 'PS University 2' },
-                { code: '8075', name: 'PS Al Owaid' },
-                { code: '8076', name: 'PS Mirbah' },
-                { code: '8077', name: 'PS Mirbah 1' },
-                { code: '8078', name: 'PS Mirbah 2.1' },
-                { code: '8079', name: 'PS Mirbah 2.2' },
-                { code: '8080', name: 'PS Mirbah 3' },
-                { code: '8081', name: 'PS Mirbah 6' },
-                { code: '8082', name: 'PS Qurayyah East' },
-                { code: '8083', name: 'PS Qurayyah' },
-                { code: '8084', name: 'PS Qurayyah West' },
-                { code: '8085', name: 'PS Thieb' },
-                { code: '8086', name: 'PS Navy Base 1' },
-                { code: '8087', name: 'PS Navy Base 2' },
-                { code: '8088', name: 'PS Qirath 2' },
-                { code: '8089', name: 'PS Qirath' },
-                { code: '8090', name: 'PS 3.1' },
-                { code: '8091', name: 'PS 4.1' },
-                { code: '8092', name: 'PS 5.1' },
-                { code: '8093', name: 'PS 6.1' },
-                { code: '8094', name: 'PS MBZC' },
-                { code: '8095', name: 'PS Free Zone 23' },
-                { code: '8096', name: 'PSs General Expenses' },
-                { code: '8097', name: 'WWCN General/Others' },
-                { code: '8098', name: 'WWCN Air Release Valve Chambers' },
-                { code: '8099', name: 'WWCN Washout Chambers' },
-                { code: '8100', name: 'WWCN Manholes' },
-                { code: '8101', name: 'Diesel Pumps (WWTP)' },
-                { code: '8102', name: 'Emergency Generators (WWTP)' },
-                { code: '8103', name: 'Fire Alarm and Fire Fighting System' },
-                { code: '8104', name: 'Buildings (Operation Building, Service Building, Workshop, Store, Guardhouses) incl. AC-Service' },
-                { code: '8105', name: 'Fence & Gates' },
-                { code: '8106', name: 'Illumination (inside & outside)' },
-                { code: '8107', name: 'Roads, Footpaths' },
-                { code: '8108', name: 'Electricity' },
-                { code: '8109', name: 'Potable Water' },
-                { code: '8110', name: 'Chlorine Gas' },
-                { code: '8111', name: 'Ferric Chloride' },
-                { code: '8112', name: 'Polyelectrolyte' },
-                { code: '8113', name: 'Diesel for Over Pumping' },
-                { code: '8114', name: 'Diesel (other consumers)' },
-                { code: '8115', name: 'Etisalat' },
-                { code: '8116', name: 'Consumables Workshop (Paint, Oil, Grease etc.)' },
-                { code: '8117', name: 'General Material Workshop (steel, nuts, bolts, welding consumables, material lathe etc.)' },
-                { code: '8118', name: 'Tools (Workshop, Landscaping etc.)' },
-                { code: '8119', name: 'HSE: (PPE, testing, calibration, Hassantuk)' },
-                { code: '8120', name: 'IT (soft and hardware incl. network, SCADA)' },
-                { code: '8121', name: 'WTP General' },
-                { code: '8122', name: 'ADM. General' },
-                { code: '8123', name: 'Lab Expenses, lab consumables, external labs' }
-                // Add more Level 2 options for WWCN & PSs
+            // Electromechanical Works
+            '32': [
+                { code: '420', name: 'Pumps Internal Cost' },
+                { code: '421', name: 'Pumps External Cost' },
+                { code: '422', name: 'Motors Internal Cost' },
+                { code: '423', name: 'Motors External Cost' },
+                { code: '424', name: 'Emergency Generators Internal Cost' },
+                { code: '425', name: 'Emergency Generators External Cost' },
+                { code: '426', name: 'Gas Compressor Internal Cost' },
+                { code: '427', name: 'Gas Compressor External Cost' },
+                { code: '428', name: 'Electrical Equipment, Instruments, Automation Equipment & IT equipment Internal Cost' },
+                { code: '429', name: 'Electrical Equipment, Instruments, Automation Equipment & IT equipment External Cost' },
+                { code: '430', name: 'Inlet Screen' },
+                { code: '431', name: 'Blowers' },
+                { code: '432', name: 'Mixers' },
+                { code: '433', name: 'Mammoth Rotors' },
+                { code: '434', name: 'Belt Press & Belt Thickener in Old & New Dewatering Building' },
+                { code: '435', name: 'Hoists and Cranes' },
+                { code: '436', name: 'Process Pipes, All kinds of Mechanical valves, fittings, and accessories' },
+                { code: '437', name: 'Chemical Dosing Station (PSs only)' },
+                { code: '438', name: 'Other Equipment Internal Cost' },
+                { code: '439', name: 'Other Equipment External Cost' },
+                { code: '440', name: 'Other Costs (Internal & External)' },
+                { code: '445', name: 'Calibration and other similar third party works' },
+
+            ],
+            '35': [
+                { code: '450', name: 'Fuel' },
+                { code: '451', name: 'Insurance' },
+                { code: '452', name: 'Renewal fees and registration' },
+                { code: '453', name: 'Maintainance and Spare parts' },
+                { code: '454', name: 'Other Costs' }
+
+            ],
+            '36': [
+                { code: '450', name: 'Fuel' },
+                { code: '460', name: 'Leasing and Rental CostsOther Costs' },
+                { code: '465', name: 'Other Costs' }
             ]
         };
 
-        const level3Options = [
-            { code: '70', name: 'Civil Works' },
-            { code: '71', name: 'Electromechanical Works' }
-        ];
 
-        const level4Options = {
-            '70': [
-                { code: '600', name: 'Civil Works for Process Structures and Tanks' },
-                { code: '601', name: 'Civil Works for Buildings in General' },
-                { code: '602', name: 'Civil Works others' }
+        const level5Options = {
+
+
+            '420': [
+                { code: '5001', name: 'New KSB Pumps (WWTS)' },
+                { code: '5002', name: 'Mechanical Seal for KSB Pumps' },
+                { code: '5003', name: 'Impeller for KSB Pumps' },
+                { code: '5004', name: 'Bearings for KSB Pumps' },
+                { code: '5005', name: 'Pump Casing for KSB Pumps' },
+                { code: '5006', name: 'Discharge Cover for KSB Pumps' },
+                { code: '5007', name: 'Other Spare parts & parts required for repair of all KSB Pumps (WWTS)' },
+                { code: '5008', name: 'New Seepex Pumps (WWTP)' },
+                { code: '5009', name: 'Spare parts & parts required for repair of all Seepex Pumps (WWTP)' },
+                { code: '5010', name: 'New Diesel Pumps (WWTS)' },
+                { code: '5011', name: 'Spare parts & parts required for repair of all Diesel Pumps (WWTS)' },
+                { code: '5012', name: 'New Pumps of other Brands (WWTS)' },
+                { code: '5013', name: 'Spare parts & parts required for repair of all other Brands of Pumps (WWTS)' }
             ],
-            '71': [
-                { code: '603', name: 'Pumps' },
-                { code: '604', name: 'Blowers' },
-                { code: '605', name: 'Mixers' },
-                { code: '606', name: 'Emergency Generators' },
-                { code: '607', name: 'Other Equipment' },
-                { code: '608', name: 'Electrical Equipment and Instrumentation' },
-                { code: '609', name: 'Hoists and Cranes' },
-                { code: '610', name: 'Process Pipes, valves, fittings and accessories' },
-                { code: '611', name: 'Chemical Dosing Station' },
-                { code: '612', name: 'Others' }
+            '421': [
+                { code: '5020', name: 'All Third-Party Cost for Pumps (WWTS)' }
+            ],
+
+            '422': [
+                { code: '5030', name: 'New Motors (WWTS) ' },
+                { code: '5031', name: 'Spare parts & parts required for repair of Motors (WWTS) ' }
+            ],
+
+            '423': [
+                { code: '5035', name: 'All Third-Party Cost for Motors (WWTS)' }
+            ],
+            '424': [
+                { code: '5040', name: 'New Caterpillar Generators (WWTP & Dry well PS)' },
+                { code: '5041', name: 'New SDMO Generators (PS)' },
+                { code: '5042', name: 'New other Brands of Generators (WWTS) ' },
+                { code: '5043', name: 'Spare parts & parts required for repair of Caterpillar Generators (WWTS) ' },
+                { code: '5044', name: 'Spare parts & parts required for repair of SDMO Generators (PS) ' },
+                { code: '5045', name: 'Spare parts & parts required for repair of other Brands of Generators (WWTS)' },
+            ],
+            '425': [
+                { code: '5050', name: 'All Third-Party Cost for Generators (WWTS) ' },
+
+            ],
+            '426': [
+
+                { code: '5060', name: 'New Gas Compressor (WWTP) ' },
+                { code: '5061', name: 'Spare parts & parts required for repair of Gas Compressor (WWTP)' },
+            ],
+
+            '427': [
+
+                { code: '5070', name: 'All Third-Party Cost for Gas Compressor (WWTP) ' },
+            ],
+            '428': [
+
+                { code: '5080', name: 'New Electrical Equipment (WWTS)  ' },
+                { code: '5081', name: 'Spare parts & parts required for repair of Electrical Equipment (WWTS)' },
+                { code: '5082', name: 'New Instruments (WWTS) ' },
+                { code: '5083', name: 'Spare parts & parts required for repair of Instruments (WWTS)' },
+                { code: '5084', name: 'New Automation Equipment (WWTS) ' },
+                { code: '5085', name: 'Spare parts & parts required for repair of Automation Equipment (WWTS)' },
+                { code: '5086', name: 'New IT Equipment (WWTS) ' },
+                { code: '5087', name: 'Spare parts & parts required for repair of IT Equipment (WWTS)' },
+            ],
+            '429': [
+                { code: '5090', name: 'All Third-Party Cost for Electrical Equipment (WWTS)' },
+                { code: '5091', name: 'All Third-Party Cost for Instruments (WWTS)' },
+                { code: '5092', name: 'All Third-Party Cost for Automation Equipment (WWTS)' },
+                { code: '5093', name: 'All Third-Party Cost for IT Equipment (WWTS)' },
+            ],
+            '430': [
+
+                { code: '5100', name: 'New Inlet Screen Unit (WWTP) ' },
+                { code: '5101', name: 'Spare parts & parts required for repair of Inlet Screen Unit (WWTP)' },
+                { code: '5101', name: 'All External/Third-Party Cost for Inlet Screen (WWTP)' },
+
+            ],
+            '431': [
+                { code: '5110', name: 'New Blowers (WWTP)' },
+                { code: '5111', name: 'Spare parts & Internal cost of parts for repair of Blowers (WWTP)' },
+                { code: '5112', name: 'All External/Third-Party Cost for Blowers (WWTP)' },
+            ],
+            '432': [
+                { code: '5120', name: 'New Mixers' },
+                { code: '5121', name: 'Spare parts & Internal cost of parts for repair of Mixers (WWTP)' },
+                { code: '5122', name: 'All External/Third-Party Cost for Mixers (WWTP)' },
+            ],
+            '433': [
+                { code: '5130', name: 'New Mammoth Rotors, New Gear box & New End Bearings (WWTP)' },
+                { code: '5131', name: 'Spare parts & Internal cost of parts for repair of all units in Mammoth Rotors (WWTP)' },
+                { code: '5132', name: 'All External/Third-Party Cost for Mammoth Rotors (WWTP)' },
+            ],
+            '434': [
+                { code: '5140', name: 'New Belt Press, New Belt Thickener in Old & New Dewatering Building (WWTP)' },
+                { code: '5141', name: 'Spare parts & Internal cost of parts for repair of all units in Belt Press & Belt Thickener in Old & New Dewatering Building (WWTP)' },
+                { code: '5142', name: 'All External/Third-Party Cost for Belt Press & Belt Thickener in Old & New Dewatering Building (WWTP)' },
+
+            ],
+            '435': [
+                { code: '5150', name: 'New Hoist & Cranes (WWTP) ' },
+                { code: '5151', name: 'Spare parts & Internal cost of parts for repair of Hoist & Cranes (WWTP)' },
+                { code: '5152', name: 'All External/Third-Party Cost for Hoist & Cranes (WWTP)' },
+            ],
+            '436': [
+                { code: '5160', name: 'Pipes, Valves, Fittings & accessories (WWTS)' },
+                { code: '5161', name: 'Spare parts & Internal cost of parts for repair of Pipes, Valves, Fittings & accessories (WWTS)' },
+                { code: '5162', name: 'All External/Third-Party Cost for Pipes, Valves, Fittings & accessories ' }
+            ],
+            '437': [
+                { code: '5170', name: 'New Dosing Station units (Dry well & Wet well PS) ' },
+                { code: '5171', name: 'Spare parts & Internal cost of parts for repair of Chemical Dosing Station (Dry well & Wet well PS) ' },
+                { code: '5172', name: 'All External/Third-Party Cost for Chemical Dosing Station (Dry well & Wet well PS' }
+            ],
+            '438': [
+                { code: '5180', name: 'All other new equipment (WWTS)' },
+                { code: '5181', name: 'All other equipment spare parts & parts required for repair of equipment (WWTS)' },
+            ],
+            '439': [
+                { code: '5190', name: 'All Third-Party Cost for Other Equipment (WWTS) ' },
+            ],
+            '440': [
+                { code: '5200', name: 'All Other Costs for WWTS (Internal & External)' },
+            ],
+            '445': [
+                { code: '5210', name: 'All Third Part Services Cost' },
             ]
+
+
         };
 
         function updateLevel2() {
             const level1 = document.getElementById('level1').value;
             const level2 = document.getElementById('level2');
-            level2.innerHTML = '<option value="">Select Level 2</option>';
+            const level3 = document.getElementById('level3');
+            const level4 = document.getElementById('level4');
+            const level5 = document.getElementById('level5');
 
-            if (level1) {
+            // Clear and populate Level 2
+            level2.innerHTML = '<option value="" selected="selected">Select Level 2</option>';
+
+            if (level2Options[level1]) {
                 level2Options[level1].forEach(option => {
-                    const newOption = document.createElement('option');
-                    newOption.value = option.code;
-                    newOption.text = option.name;
-                    level2.appendChild(newOption);
+                    const opt = document.createElement('option');
+                    opt.value = option.code;
+                    opt.innerHTML = option.name;
+                    level2.appendChild(opt);
                 });
             }
-            updateLevel3();
+
+            // Special case when level1 is 111, only update level 2, deactivate the other levels
+            if (level1 === '111' || level1 === '122') {
+                // Deactivate Levels 3, 4, and 5
+                level3.disabled = true;
+                level3.innerHTML = '<option value="" selected="selected">Deactivated</option>';
+                level4.disabled = true;
+                level4.innerHTML = '<option value="" selected="selected">Deactivated</option>';
+                level5.disabled = true;
+                level5.innerHTML = '<option value="" selected="selected">Deactivated</option>';
+            } else {
+                // Regular case: activate Levels 3, 4, and 5
+                level3.disabled = false;
+                level4.disabled = false;
+                level5.disabled = false;
+
+                // Call the updateLevel3 function to refresh Level 3 options
+                updateLevel3();
+            }
         }
+
+        // Ensure that updateLevel2 is called when an option is selected in Level 2
+        document.getElementById('level2').addEventListener('change', function () {
+            const level1 = document.getElementById('level1').value;
+            if (level1 === '111' || level1 === '122') {
+                const level3 = document.getElementById('level3');
+                const level4 = document.getElementById('level4');
+                const level5 = document.getElementById('level5');
+
+                // Deactivate Levels 3, 4, and 5
+                level3.disabled = true;
+                level3.innerHTML = '<option value="" selected="selected">Deactivated</option>';
+                level4.disabled = true;
+                level4.innerHTML = '<option value="" selected="selected">Deactivated</option>';
+                level5.disabled = true;
+                level5.innerHTML = '<option value="" selected="selected">Deactivated</option>';
+            }
+        });
+
 
         function updateLevel3() {
+            const level2 = document.getElementById('level2').value;
             const level3 = document.getElementById('level3');
-            level3.innerHTML = '<option value="">Select Level 3</option>';
+            const level1 = document.getElementById('level1').value;
+            const level4 = document.getElementById('level4');
+            const level5 = document.getElementById('level5');
 
-            level3Options.forEach(option => {
-                const newOption = document.createElement('option');
-                newOption.value = option.code;
-                newOption.text = option.name;
-                level3.appendChild(newOption);
-            });
+            // Reset the Level 3 options
+            level3.innerHTML = '<option value="" selected="selected">Select Level 3</option>';
 
-            updateLevel4();
+            // Populate Level 3 options based on the selected Level 2
+            if (level3Options[level2]) {
+                level3Options[level2].forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.code;
+                    opt.innerHTML = option.name;
+                    level3.appendChild(opt);
+                });
+            }
+
+
+            updateLevel4()
         }
+
+
 
         function updateLevel4() {
             const level3 = document.getElementById('level3').value;
-            const level4 = document.getElementById('level4');
-            level4.innerHTML = '<option value="">Select Level 4</option>';
+            const level1 = parseInt(document.getElementById('level1').value);
+            const level2 = document.getElementById('level2').value;
 
-            if (level3) {
-                level4Options[level3].forEach(option => {
-                    const newOption = document.createElement('option');
-                    newOption.value = option.code;
-                    newOption.text = option.name;
-                    level4.appendChild(newOption);
+            // Assuming level1 is a number
+            const level4 = document.getElementById('level4');
+
+            // Reset level 4 options
+            level4.innerHTML = '<option value="" selected="selected">Select Level 4</option>';
+
+            let filteredOptions = [];
+
+            // Conditions for Level 1 and Level 3
+            if (level1 === 110 && level3 === '30') {
+                filteredOptions.push({
+                    code: '401',
+                    name: 'Civil Works others (Road, footpath, perimeter wall, landscaping, illumination, perimeter wall) - WWTP'
                 });
             }
-
-            generateCode();
-        }
-
-        function checkOthers() {
-            const level4 = document.getElementById('level4').value;
-            const otherField = document.getElementById('otherField');
-
-            if (level4 === '609') {
-                otherField.classList.remove('hidden');
-            } else {
-                otherField.classList.add('hidden');
-                generateCode();
+            else if (level3 === '30' && [101, 102, 103, 104, 105, 106, 111].includes(level1)) {
+                filteredOptions = filteredOptions.concat([
+                    { code: '401', name: 'Civil Works others (Road, footpath, perimeter wall, landscaping, illumination, perimeter wall) - WWTP' },
+                    { code: '402', name: 'Civil Works for Process Structures and Tanks - WWTP' },
+                    { code: '403', name: 'Civil Works for Buildings in General - WWTP' }
+                ]);
             }
+            else if (level1 === 120 && level3 === '30') {
+                filteredOptions = filteredOptions.concat([
+                    { code: '404', name: 'Civil Works for Buildings in General - PSS' },
+                    { code: '405', name: 'Civil Works for Process Structures and Tanks - PSS' },
+                    { code: '406', name: 'Civil Works others (Road, footpath, perimeter wall, landscaping, illumination, perimeter wall) - PSS' }
+                ]);
+            }
+            else if (level1 === 121 && level3 === '30') {
+                filteredOptions = filteredOptions.concat([
+                    { code: '407', name: 'Air Release Valve Chambers _WWCN' },
+                    { code: '408', name: 'Washout Chambers _WWCN' },
+                    { code: '409', name: 'Manholes _WWCN' }
+                ]);
+            }
+            else if ([107, 108,109].includes(level1) && level3 === '30') {
+                filteredOptions = filteredOptions.concat([
+                    { code: '401', name: 'Civil Works others (Road, footpath, perimeter wall, landscaping, illumination, perimeter wall) - WWTP' },
+                    { code: '403', name: 'Civil Works for Buildings in General - WWTP' }
+                ]);
+            }
+            else if ([109].includes(level1) && level3 === '30') {
+                filteredOptions = filteredOptions.concat([
+                    { code: '410', name: 'Decieded By Biju' },
+                    // { code: '403', name: 'Civil Works for Buildings in General - WWTP' }
+                ]);
+            } 
+            // else if ([130].includes(level1) && level3 === '30') {
+            //     filteredOptions = filteredOptions.concat([
+            //         { code: '415', name: 'All Third party services cost' },
+            //         // { code: '403', name: 'Civil Works for Buildings in General - WWTP' }
+            //     ]);
+            // }
+            else if (level4Options[level3]) {
+                filteredOptions = filteredOptions.concat(level4Options[level3]);
+            }
+
+            // Populate level 4 dropdown with filtered options
+            filteredOptions.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.code;
+                opt.innerHTML = option.name;
+                level4.appendChild(opt);
+            });
+
+
+            updateLevel5();
         }
 
-        function addCustomOption() {
-            const otherName = document.getElementById('otherName').value;
-            const level4 = document.getElementById('level4');
-            const newCode = (level4Options['70'].length + 600).toString();
 
-            const newOption = { code: newCode, name: otherName };
-            level4Options['70'].push(newOption);
-            level4Options['71'].push(newOption);
 
-            const optionElement = document.createElement('option');
-            optionElement.value = newCode;
-            optionElement.text = otherName;
-            level4.appendChild(optionElement);
 
-            level4.value = newCode;
+
+
+        function updateLevel5() {
+            const level1 = document.getElementById('level1').value;
+            const level3 = document.getElementById('level3').value;
+            const level4 = document.getElementById('level4').value;
+            const level5 = document.getElementById('level5');
+
+            // Clear existing options in Level 5
+            level5.innerHTML = '<option value="" selected="selected">Select Level 5</option>';
+
+            // Deactivate Level 5 if Level 1 is 150 or Level 4 is 30
+            if (level1 === '150' || level3 === '30') {
+                level5.disabled = true;
+                level5.innerHTML = '<option value="" selected="selected">Deactivated</option>';
+            } else {
+                level5.disabled = false;
+
+                // Populate Level 5 options if not deactivated
+                if (level5Options[level4]) {
+                    level5Options[level4].forEach(option => {
+                        const opt = document.createElement('option');
+                        opt.value = option.code;
+                        opt.innerHTML = option.name;
+                        level5.appendChild(opt);
+                    });
+                }
+            }
+
+            // Optionally, call the generateCode function if needed
             generateCode();
-            document.getElementById('otherField').classList.add('hidden');
         }
+
+
 
         function generateCode() {
             const level1 = document.getElementById('level1').value;
             const level2 = document.getElementById('level2').value;
             const level3 = document.getElementById('level3').value;
             const level4 = document.getElementById('level4').value;
-            const generatedCode = `${level1}-${level2}-${level3}-${level4}`;
+            const level5 = document.getElementById('level5').value;
+            const generatedCode = `${level1}-${level2}-${level3}-${level4}-${level5}`;
             document.getElementById('generatedCode').innerText = generatedCode;
         }
 
+
+
+
         function validateCode() {
-            const inputCode = document.getElementById('inputCode').value.split('-');
-            const [level1Code, level2Code, level3Code, level4Code] = inputCode;
+            const inputCode = document.getElementById('inputCode').value;
+            const validationResult = document.getElementById('validationResult');
 
-            const level1Name = getLevel1Name(level1Code);
-            const level2Name = getLevel2Name(level1Code, level2Code);
-            const level3Name = getLevel3Name(level3Code);
-            const level4Name = getLevel4Name(level3Code, level4Code);
+            // Splitting the input code into its respective levels
+            const [level1, level2, level3, level4, level5] = inputCode.split('-');
 
-            const validationResult = `
-                <div><strong>Level 1:</strong> ${level1Name}</div>
-                <div><strong>Level 2:</strong> ${level2Name}</div>
-                <div><strong>Level 3:</strong> ${level3Name}</div>
-                <div><strong>Level 4:</strong> ${level4Name}</div>
-            `;
+            // Initialize variables for level names
+            let level1Name = '';
+            let level2Name = '';
+            let level3Name = '';
+            let level4Name = '';
+            let level5Name = '';
 
-            document.getElementById('validationResult').innerHTML = validationResult;
+            // Check if level1 dropdown is disabled
+            const level1Dropdown = document.getElementById('level1');
+            if (!level1Dropdown.disabled) {
+                level1Name = document.querySelector(`#level1 option[value="${level1}"]`)?.textContent || '';
+            }
+
+            // Check if level2 dropdown is disabled
+            const level2Dropdown = document.getElementById('level2');
+            if (!level2Dropdown.disabled) {
+                const level2OptionsForLevel1 = level2Options[level1] || [];
+                level2Name = level2OptionsForLevel1.find(opt => opt.code === level2)?.name || '';
+            }
+
+            // Check if level3 dropdown is disabled
+            const level3Dropdown = document.getElementById('level3');
+            if (!level3Dropdown.disabled) {
+                const level3OptionsForLevel2 = level3Options[level2] || [];
+                level3Name = level3OptionsForLevel2.find(opt => opt.code === level3)?.name || '';
+            }
+
+            // Check if level4 dropdown is disabled
+            const level4Dropdown = document.getElementById('level4');
+            if (!level4Dropdown.disabled) {
+                const level4OptionsForLevel3 = level4Options[level3] || [];
+                level4Name = level4OptionsForLevel3.find(opt => opt.code === level4)?.name || '';
+            }
+
+            // Check if level5 dropdown is disabled
+            const level5Dropdown = document.getElementById('level5');
+            if (!level5Dropdown.disabled) {
+                const level5OptionsForLevel4 = level5Options[level4] || [];
+                level5Name = level5OptionsForLevel4.find(opt => opt.code === level5)?.name || '';
+            }
+
+            // Construct the validation result with visible levels only
+            let resultHTML = '';
+            if (level1Name) resultHTML += `<div id="level1_VC">Level 1: ${level1Name}</div><br>`;
+            if (level2Name) resultHTML += `<div id="level2_VC">Level 2: ${level2Name}</div><br>`;
+            if (level3Name) resultHTML += `<div id="level3_VC">Level 3: ${level3Name}</div><br>`;
+            if (level4Name) resultHTML += `<div id="level4_VC">Level 4: ${level4Name}</div><br>`;
+            if (level5Name) resultHTML += `<div id="level5_VC">Level 5: ${level5Name}</div>`;
+
+            // Displaying the validation result
+            validationResult.innerHTML = resultHTML || 'No valid levels found.';
         }
 
-        function getLevel1Name(code) {
-            const options = { '90': 'WWTP', '91': 'WWCN & PSs' };
-            return options[code] || 'Unknown';
-        }
 
-        function getLevel2Name(level1, code) {
-            const options = level2Options[level1] || [];
-            const option = options.find(opt => opt.code === code);
-            return option ? option.name : 'Unknown';
-        }
-
-        function getLevel3Name(code) {
-            const option = level3Options.find(opt => opt.code === code);
-            return option ? option.name : 'Unknown';
-        }
-
-        function getLevel4Name(level3, code) {
-            const options = level4Options[level3] || [];
-            const option = options.find(opt => opt.code === code);
-            return option ? option.name : 'Unknown';
-        }
     </script>
 </body>
 
